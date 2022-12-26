@@ -1,7 +1,7 @@
 
 const { client } = require('./server');
 
-const getAll  = async (tableName) => {
+const getAll = async (tableName) => {
     try {
       const result = await client.query(`SELECT * FROM ${tableName}`);
       return result.rows;
