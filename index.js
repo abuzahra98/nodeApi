@@ -7,7 +7,7 @@ const { client } = require('./server');
 const app = express();
 app.use(cors());
 const bodyParser = require('body-parser');
-app.use(bodyParser.json());
+app.use(bodyParser.json()); 
 
 
 app.get('/', (req, res) => {
