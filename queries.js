@@ -11,10 +11,10 @@ const getAll = async (tableName) => {
     }
   };
   
-  const insertBook = async (title, image) => {
+  const insertRow = async (title, image,tableName) => {
     try {
       await client.query(`
-        INSERT INTO books (title, image)
+        INSERT INTO ${tableName} (title, image)
         VALUES ($1, $2);
       `, [title, image]);
     } catch (error) {
@@ -23,9 +23,9 @@ const getAll = async (tableName) => {
     }
   };
   
-  const deleteBook = async (bookId) => {
+  const deleteRow = async (bookId,tableName) => {
     try {
-      await client.query('DELETE FROM books WHERE id = $1', [bookId]);
+      await client.query(`DELETE FROM ${tableName} WHERE id = $1`, [bookId]);
       console.log(bookId, 'deleted');
     } catch (error) {
       console.error(error);
@@ -33,4 +33,4 @@ const getAll = async (tableName) => {
     }
   };
   
-  module.exports = { getAll, insertBook, deleteBook };
+  module.exports = { getAll, insertRow, deleteRow };

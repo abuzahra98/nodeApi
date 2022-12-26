@@ -26,9 +26,9 @@ app.get('/books', async (req, res) => {
 });
 
 app.post('/books', async (req, res) => {
-  const { title, image } = req.body;
+  const { title, image ,tableName} = req.body;
   try {
-    await queries.insertBook(title, image, );
+    await queries.insertRow(title, image, 'books');
     res.send('Data inserted into database');
   } catch (error) {
     console.error(error);
@@ -39,7 +39,7 @@ app.post('/books', async (req, res) => {
 app.delete('/books/:bookId', async (req, res) => {
   const bookId = req.params.bookId;
   try {
-    await queries.deleteBook(bookId);
+    await queries.deleteRow(bookId,'books');
     res.sendStatus(200);
   } catch (error) {
     console.error(error);
