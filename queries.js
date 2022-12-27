@@ -10,6 +10,19 @@ const getAll = async (tableName) => {
       throw error;
     }
   };
+
+  const getById = async (auther_id,tableName) => {
+    try {
+    //   const result = await client.query(`SELECT * FROM ${tableName}`);
+      const result = await client.query(`
+      SELECT * FROM ${tableName} WHERE auther_id = $1
+       `, [auther_id]);
+      return result.rows;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
   
   const insertRow = async (title, image,tableName) => {
     try {
@@ -34,4 +47,4 @@ const getAll = async (tableName) => {
   };
   
   
-  module.exports = { getAll, insertRow, deleteRow };
+  module.exports = { getAll, insertRow, deleteRow ,getById};

@@ -25,6 +25,28 @@ app.get('/books', async (req, res) => {
   }
 });
 
+app.get('/auther', async (req, res) => {
+  try {
+    const auther = await queries.getAll('auther');
+    res.json(auther);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
+app.get('/books/:auther_id', async (req, res) => {
+  const auther_id = req.params.auther_id;
+  try {
+    const books = await queries.getById(auther_id,'books');
+    res.json(books);
+
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
 app.post('/books', async (req, res) => {
   const { title, image } = req.body;
   try {
@@ -48,16 +70,18 @@ app.delete('/books/:bookId', async (req, res) => {
 });
 
 
+
+
 // Start the server on port 3000
 const port = process.env.PORT || 443;
 app.listen(port, () => {
   console.log(`API listening on port ${port}...`);
 });
 
+
 // client.query(`
 //   CREATE TABLE auther (
 //     id SERIAL PRIMARY KEY,
-//     auther_id INTEGER REFERENCES books(id),
 //     name TEXT NOT NULL
 //   );
 // `, (err, res) => {
@@ -65,6 +89,8 @@ app.listen(port, () => {
 // });
 // const createTableSql = `CREATE TABLE books (
 //   id SERIAL PRIMARY KEY,
+//   auther_id INTEGER REFERENCES auther(id),
+
 //   title TEXT NOT NULL,
 //   image TEXT NOT NULL UNIQUE
 // )`;
