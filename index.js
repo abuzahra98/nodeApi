@@ -26,7 +26,7 @@ app.get('/books', async (req, res) => {
 });
 
 app.post('/books', async (req, res) => {
-  const { title, image ,tableName} = req.body;
+  const { title, image } = req.body;
   try {
     await queries.insertRow(title, image, 'books');
     res.send('Data inserted into database');
@@ -54,7 +54,15 @@ app.listen(port, () => {
   console.log(`API listening on port ${port}...`);
 });
 
-
+// client.query(`
+//   CREATE TABLE auther (
+//     id SERIAL PRIMARY KEY,
+//     auther_id INTEGER REFERENCES books(id),
+//     name TEXT NOT NULL
+//   );
+// `, (err, res) => {
+//   console.log(err, res);
+// });
 // const createTableSql = `CREATE TABLE books (
 //   id SERIAL PRIMARY KEY,
 //   title TEXT NOT NULL,

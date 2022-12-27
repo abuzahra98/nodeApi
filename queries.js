@@ -33,4 +33,5 @@ const getAll = async (tableName) => {
     }
   };
   
+  
   module.exports = { getAll, insertRow, deleteRow };
