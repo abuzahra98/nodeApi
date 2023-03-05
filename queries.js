@@ -11,12 +11,12 @@ const getAll = async (tableName) => {
   }
 };
 
-const getById = async (auther_id, tableName) => {
+const getById = async (id, tableName) => {
   try {
     //   const result = await client.query(`SELECT * FROM ${tableName}`);
     const result = await client.query(`
-      SELECT * FROM ${tableName} WHERE auther_id = $1
-       `, [auther_id]);
+      SELECT * FROM ${tableName} WHERE id = $1
+       `, [id]);
     return result.rows;
   } catch (error) {
     console.error(error);
@@ -24,12 +24,12 @@ const getById = async (auther_id, tableName) => {
   }
 };
 
-const insertRow = async (title, image, tableName) => {
+const insertRow = async (title, image, description, tableName) => {
   try {
     await client.query(`
-        INSERT INTO ${tableName} (title, image)
-        VALUES ($1, $2);
-      `, [title, image]);
+        INSERT INTO ${tableName} (title, image, description)
+        VALUES ($1, $2, $3);
+      `, [title, image, description]);
   } catch (error) {
     console.error(error);
     throw error;
@@ -47,4 +47,29 @@ const deleteRow = async (bookId, tableName) => {
 };
 
 
-module.exports = { getAll, insertRow, deleteRow, getById };
+const insertUser = async (user_name, img, password, email, tableName) => {
+  try {
+    await client.query(`
+        INSERT INTO ${tableName} (user_name, img, password, email)
+        VALUES ($1, $2, $3, $4);
+      `, [user_name, img, password, email]);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+
+const getUserByUserName = async (user_name, table) => {
+   
+    const result = await client.query(`SELECT * FROM ${table} WHERE user_name = $1`, [user_name]);
+    if (result.rows.length > 0) {
+      return result.rows[0];
+    } else {
+      return null;
+    }
+ 
+};
+
+
+module.exports = { getAll, insertRow, deleteRow, getById, insertUser ,getUserByUserName };
