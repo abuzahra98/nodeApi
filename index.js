@@ -8,7 +8,7 @@ const app = express();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-
+require('dotenv').config()
 app.use(cors());
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -21,7 +21,18 @@ app.get('/', (req, res) => {
 
 //books api ***********************************************************************
 
-app.get('/books', async (req, res) => {
+// app.get('/books', async (req, res) => {
+//   try {
+//     const books = await queries.getAll('books');
+//     res.json(books);
+//   } catch (error) {
+//     console.error(error);
+//     res.sendStatus(500);
+//   }
+// });
+
+
+app.get('/books', authenticateToken, async (req, res) => {
   try {
     const books = await queries.getAll('books');
     res.json(books);
@@ -30,6 +41,24 @@ app.get('/books', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (token == null) return res.sendStatus(401); // No token provided
+
+try {
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403); // Invalid token
+   
+    req.user = user;
+    next();
+  });
+  
+} catch (error) {
+  
+}
+}
 
 app.get('/books/:id', async (req, res) => {
   const id = req.params.id;
@@ -129,7 +158,7 @@ app.get('/users', async (req, res) => {
 });
 
 
-app.post('/users/signin', [
+app.post('/signin', [
   body('user_name').notEmpty().withMessage('user_name is required').withMessage('Invalid user_name'),
   body('password').notEmpty().withMessage('Password is required')
 ], async (req, res) => {
@@ -152,12 +181,13 @@ app.post('/users/signin', [
     else {
       const payload = {
         user: {
-          id: user.id
+          id: user.id,
+          user_name:user.user_name
         }
       };
-      const secretKey = crypto.randomBytes(32).toString('hex');
-      const token = jwt.sign(payload, secretKey, { expiresIn: '9d' });
-      res.status(200).json({ response: [{ token }] });
+      // const secretKey = crypto.randomBytes(32).toString('hex');
+      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '9d' });
+      res.status(200).json({ data: [{ token }] });
     }
   } catch (error) {
     console.error(error);
