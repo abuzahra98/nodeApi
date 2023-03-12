@@ -187,7 +187,7 @@ app.post('/signin', [
       };
       // const secretKey = crypto.randomBytes(32).toString('hex');
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '9d' });
-      res.status(200).json({ data: [{ token }] });
+      res.status(200).json({ token});
     }
   } catch (error) {
     console.error(error);
